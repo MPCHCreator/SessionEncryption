@@ -4,14 +4,33 @@ include_once "EncryptionPHP/EncryptionPHP.php";
 
 class SessionEncryption{
 
-    public static function sessionEncrypt($variableSession, $keyDirectory){
+    /**
+     * @param mixed $variableSession
+     * @param string $keyDirectory
+     * 
+     * @return void
+     */
+    public static function sessionEncrypt($variableSession, $keyDirectory = "config/key.txt"){
         SessionEncryption::session($variableSession, $keyDirectory, "encode");
     }
 
-    public static function sessionDecrypt($variableSession, $keyDirectory){
+    /**
+     * @param mixed $variableSession
+     * @param string $keyDirectory
+     * 
+     * @return void
+     */
+    public static function sessionDecrypt($variableSession, $keyDirectory = "config/key.txt"){
         SessionEncryption::session($variableSession, $keyDirectory, "decode");
     }
 
+    /**
+     * @param mixed $variableSession
+     * @param mixed $keyDirectory
+     * @param mixed $methodName
+     * 
+     * @return void
+     */
     private static function session($variableSession, $keyDirectory, $methodName){
         # Obtenemos el nombre de la clave de la variable de sesion
         $variableName = array_keys($_SESSION, $variableSession);
@@ -35,6 +54,9 @@ class SessionEncryption{
             # Verificamos si es un string
             case is_string($variableSession):
                 $sessionContent = EncryptionPHP::$methodName($variableSession, $keyDirectory);
+                break;
+            default:
+                $sessionContent = $variableSession;
                 break;
         }
         # establecemos el contenido cifrado en la variable de sesion
